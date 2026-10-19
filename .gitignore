@@ -1,0 +1,9 @@
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.db
+.token
+.env
+.pytest_cache/
+.carte_*.json

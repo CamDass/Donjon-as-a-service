@@ -1,0 +1,999 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Dungeon as a Service",
+    "description": "Moteur de jeu de rôle textuel — Pixel Crypt",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "Authentification"
+        ],
+        "summary": "Register",
+        "description": "Crée un compte joueur.",
+        "operationId": "register_auth_register_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlayerCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Authentification"
+        ],
+        "summary": "Login",
+        "description": "Se connecte (formulaire OAuth2) et reçoit un jeton JWT.",
+        "operationId": "login_auth_login_post",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_login_auth_login_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Token"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/heroes": {
+      "get": {
+        "tags": [
+          "Héros"
+        ],
+        "summary": "Lister Heros",
+        "description": "Liste les héros du joueur connecté.",
+        "operationId": "lister_heros_heroes_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/HeroRead"
+                  },
+                  "type": "array",
+                  "title": "Response Lister Heros Heroes Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Héros"
+        ],
+        "summary": "Creer Hero",
+        "description": "Crée un héros dans la salle de départ, avec ses points de vie au maximum.",
+        "operationId": "creer_hero_heroes_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HeroCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HeroRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/heroes/{hero_id}": {
+      "get": {
+        "tags": [
+          "Héros"
+        ],
+        "summary": "Lire Hero",
+        "description": "Consulte un héros (même mort).",
+        "operationId": "lire_hero_heroes__hero_id__get",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "hero_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Hero Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HeroRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/heroes/{hero_id}/room": {
+      "get": {
+        "tags": [
+          "Héros",
+          "Jeu"
+        ],
+        "summary": "Decrire Salle",
+        "description": "Décrit la salle où se trouve le héros.",
+        "operationId": "decrire_salle_heroes__hero_id__room_get",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "hero_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Hero Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoomRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/heroes/{hero_id}/move": {
+      "post": {
+        "tags": [
+          "Héros",
+          "Jeu"
+        ],
+        "summary": "Deplacer",
+        "description": "Déplace le héros dans une direction et renvoie la nouvelle salle.",
+        "operationId": "deplacer_heroes__hero_id__move_post",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "hero_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Hero Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MoveRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoomRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/heroes/{hero_id}/attack": {
+      "post": {
+        "tags": [
+          "Héros",
+          "Jeu"
+        ],
+        "summary": "Attaquer",
+        "description": "Déroule un tour de combat : le héros frappe, puis le monstre riposte s'il survit.",
+        "operationId": "attaquer_heroes__hero_id__attack_post",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "hero_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Hero Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AttackResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/heroes/{hero_id}/rest": {
+      "post": {
+        "tags": [
+          "Héros",
+          "Jeu"
+        ],
+        "summary": "Se Reposer",
+        "description": "Repos de 3 secondes (asynchrone) : le héros récupère tous ses points de vie.",
+        "operationId": "se_reposer_heroes__hero_id__rest_post",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "hero_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Hero Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HeroRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/leaderboard": {
+      "get": {
+        "tags": [
+          "Classement"
+        ],
+        "summary": "Classement",
+        "description": "Les 10 meilleurs héros (vainqueurs d'abord, puis par or). Filtre optionnel par classe.",
+        "operationId": "classement_leaderboard_get",
+        "parameters": [
+          {
+            "name": "classe",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "guerrier",
+                    "mage",
+                    "voleur"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Classe"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LeaderboardEntry"
+                  },
+                  "title": "Response Classement Leaderboard Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "tags": [
+          "Système"
+        ],
+        "summary": "Health",
+        "description": "Vérifie que le serveur répond.",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Health Health Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AttackResult": {
+        "properties": {
+          "degats_infliges": {
+            "type": "integer",
+            "title": "Degats Infliges"
+          },
+          "critique": {
+            "type": "boolean",
+            "title": "Critique"
+          },
+          "degats_subis": {
+            "type": "integer",
+            "title": "Degats Subis"
+          },
+          "pv_heros": {
+            "type": "integer",
+            "title": "Pv Heros"
+          },
+          "pv_monstre": {
+            "type": "integer",
+            "title": "Pv Monstre"
+          },
+          "issue": {
+            "type": "string",
+            "enum": [
+              "en_cours",
+              "monstre_vaincu",
+              "heros_mort"
+            ],
+            "title": "Issue"
+          },
+          "or_gagne": {
+            "type": "integer",
+            "title": "Or Gagne"
+          },
+          "victoire": {
+            "type": "boolean",
+            "title": "Victoire"
+          }
+        },
+        "type": "object",
+        "required": [
+          "degats_infliges",
+          "critique",
+          "degats_subis",
+          "pv_heros",
+          "pv_monstre",
+          "issue",
+          "or_gagne",
+          "victoire"
+        ],
+        "title": "AttackResult"
+      },
+      "Body_login_auth_login_post": {
+        "properties": {
+          "grant_type": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^password$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Grant Type"
+          },
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "title": "Password"
+          },
+          "scope": {
+            "type": "string",
+            "title": "Scope",
+            "default": ""
+          },
+          "client_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Client Id"
+          },
+          "client_secret": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "format": "password",
+            "title": "Client Secret"
+          }
+        },
+        "type": "object",
+        "required": [
+          "username",
+          "password"
+        ],
+        "title": "Body_login_auth_login_post"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HeroCreate": {
+        "properties": {
+          "nom": {
+            "type": "string",
+            "maxLength": 20,
+            "minLength": 3,
+            "title": "Nom"
+          },
+          "classe": {
+            "type": "string",
+            "enum": [
+              "guerrier",
+              "mage",
+              "voleur"
+            ],
+            "title": "Classe"
+          },
+          "force": {
+            "type": "integer",
+            "maximum": 8.0,
+            "minimum": 1.0,
+            "title": "Force"
+          },
+          "agilite": {
+            "type": "integer",
+            "maximum": 8.0,
+            "minimum": 1.0,
+            "title": "Agilite"
+          },
+          "intelligence": {
+            "type": "integer",
+            "maximum": 8.0,
+            "minimum": 1.0,
+            "title": "Intelligence"
+          }
+        },
+        "type": "object",
+        "required": [
+          "nom",
+          "classe",
+          "force",
+          "agilite",
+          "intelligence"
+        ],
+        "title": "HeroCreate"
+      },
+      "HeroRead": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "nom": {
+            "type": "string",
+            "title": "Nom"
+          },
+          "classe": {
+            "type": "string",
+            "title": "Classe"
+          },
+          "force": {
+            "type": "integer",
+            "title": "Force"
+          },
+          "agilite": {
+            "type": "integer",
+            "title": "Agilite"
+          },
+          "intelligence": {
+            "type": "integer",
+            "title": "Intelligence"
+          },
+          "pv": {
+            "type": "integer",
+            "title": "Pv"
+          },
+          "pv_max": {
+            "type": "integer",
+            "title": "Pv Max"
+          },
+          "salle_actuelle": {
+            "type": "string",
+            "title": "Salle Actuelle"
+          },
+          "or_": {
+            "type": "integer",
+            "title": "Or"
+          },
+          "victoire": {
+            "type": "boolean",
+            "title": "Victoire"
+          },
+          "en_combat": {
+            "type": "boolean",
+            "title": "En Combat"
+          },
+          "est_vivant": {
+            "type": "boolean",
+            "title": "Est Vivant"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "nom",
+          "classe",
+          "force",
+          "agilite",
+          "intelligence",
+          "pv",
+          "pv_max",
+          "salle_actuelle",
+          "or_",
+          "victoire",
+          "en_combat",
+          "est_vivant"
+        ],
+        "title": "HeroRead"
+      },
+      "LeaderboardEntry": {
+        "properties": {
+          "rang": {
+            "type": "integer",
+            "title": "Rang"
+          },
+          "nom": {
+            "type": "string",
+            "title": "Nom"
+          },
+          "classe": {
+            "type": "string",
+            "title": "Classe"
+          },
+          "joueur": {
+            "type": "string",
+            "title": "Joueur"
+          },
+          "or_": {
+            "type": "integer",
+            "title": "Or"
+          },
+          "victoire": {
+            "type": "boolean",
+            "title": "Victoire"
+          },
+          "est_vivant": {
+            "type": "boolean",
+            "title": "Est Vivant"
+          },
+          "salle": {
+            "type": "string",
+            "title": "Salle"
+          }
+        },
+        "type": "object",
+        "required": [
+          "rang",
+          "nom",
+          "classe",
+          "joueur",
+          "or_",
+          "victoire",
+          "est_vivant",
+          "salle"
+        ],
+        "title": "LeaderboardEntry"
+      },
+      "MonstreRead": {
+        "properties": {
+          "nom": {
+            "type": "string",
+            "title": "Nom"
+          },
+          "pv": {
+            "type": "integer",
+            "title": "Pv"
+          },
+          "pv_max": {
+            "type": "integer",
+            "title": "Pv Max"
+          },
+          "attaque": {
+            "type": "integer",
+            "title": "Attaque"
+          }
+        },
+        "type": "object",
+        "required": [
+          "nom",
+          "pv",
+          "pv_max",
+          "attaque"
+        ],
+        "title": "MonstreRead"
+      },
+      "MoveRequest": {
+        "properties": {
+          "direction": {
+            "type": "string",
+            "enum": [
+              "nord",
+              "sud",
+              "est",
+              "ouest"
+            ],
+            "title": "Direction"
+          }
+        },
+        "type": "object",
+        "required": [
+          "direction"
+        ],
+        "title": "MoveRequest"
+      },
+      "PlayerCreate": {
+        "properties": {
+          "username": {
+            "type": "string",
+            "maxLength": 20,
+            "minLength": 3,
+            "title": "Username"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 6,
+            "title": "Password"
+          }
+        },
+        "type": "object",
+        "required": [
+          "username",
+          "password"
+        ],
+        "title": "PlayerCreate"
+      },
+      "PlayerRead": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "username": {
+            "type": "string",
+            "title": "Username"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "username"
+        ],
+        "title": "PlayerRead"
+      },
+      "RoomRead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "nom": {
+            "type": "string",
+            "title": "Nom"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "sorties": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Sorties"
+          },
+          "monstre": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MonstreRead"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "nom",
+          "description",
+          "sorties"
+        ],
+        "title": "RoomRead"
+      },
+      "Token": {
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "title": "Access Token"
+          },
+          "token_type": {
+            "type": "string",
+            "title": "Token Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "access_token",
+          "token_type"
+        ],
+        "title": "Token"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    },
+    "securitySchemes": {
+      "OAuth2PasswordBearer": {
+        "type": "oauth2",
+        "flows": {
+          "password": {
+            "scopes": {},
+            "tokenUrl": "auth/login"
+          }
+        }
+      }
+    }
+  }
+}
