@@ -533,7 +533,8 @@ AIDE = """Commandes (écris le mot, ou sa première lettre) :
 
 COMMENT_JOUER = (
     "Comment jouer : avance de salle en salle vers le nord pour atteindre la salle du trône.\n"
-    "Quand un ennemi apparaît, tape « frapper » jusqu'à ce qu'il tombe. Blessé ? Tape « repos »."
+    "Quand un ennemi apparaît, tape « frapper » jusqu'à ce qu'il tombe. Blessé ? Tape « repos ».\n"
+    "Perdu ? Tape « carte » (ou k) pour voir les salles déjà visitées."
 )
 
 # Les anciens noms restent acceptés
@@ -639,7 +640,7 @@ def afficher_choix(salle: dict, hero: dict) -> None:
     dire()
     if salle["monstre"] is not None:
         dire("Que faire ?  frapper", "jaune")
-        dire("(combat en cours : impossible de fuir ou de se reposer)   autres : moi, aide", "gris")
+        dire("(combat en cours : impossible de fuir ou de se reposer)   autres : carte  moi  aide", "gris")
         return
     dire("Que faire ?  aller vers : " + "  ".join(salle["sorties"]), "jaune")
     blesse = hero["pv"] <= hero["pv_max"] * 0.4
