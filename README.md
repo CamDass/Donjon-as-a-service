@@ -79,15 +79,12 @@ python client/play.py --help        # une commande par action
 pytest
 ```
 
----
-
-<!-- À COMPLÉTER PAR LE GROUPE AVANT LE RENDU -->
 
 ## Notre rendu
 
-- **Membres du groupe :**
-- **Lien du dépôt Git :**
+- **Membres du groupe :** camille victor gabriel
+- **Lien du dépôt Git :** https://github.com/CamDass/Donjon-as-a-service
 - **Palier atteint :** 4 (le héros, le donjon, le combat, le verrou)
 - **Bonus réalisés :** B-1 client terminal (`python client/play.py play`), B-2 classement
   (`GET /leaderboard`), B-3 tests (`pytest`), B-5 journalisation (console du serveur)
-- **Ce qui ne fonctionne pas / difficultés :**
+- **Ce qui ne fonctionne pas / difficultés :** L’activation de l’environnement virtuel était bloquée par PowerShell, ce qui faisait échouer le lancement (fastapi introuvable), et la règle « somme des stats = 10 » a demandé un model_validator Pydantic pour renvoyer une 422 au lieu d’une 400.
