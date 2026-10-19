@@ -664,6 +664,8 @@ def boucle_de_jeu(hero: dict) -> None:
     salle = action_regarder(hero["id"])
     dire()
     dire(COMMENT_JOUER, "gris")
+    dire()
+    dire(AIDE)  # affichée d'office pour que le joueur sache quoi taper
     while True:
         hero = appeler("GET", f"/heroes/{hero['id']}")
         afficher_choix(salle, hero)
